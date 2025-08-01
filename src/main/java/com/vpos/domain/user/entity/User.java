@@ -1,18 +1,30 @@
 package com.vpos.domain.user.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
     @Column(nullable = false, name = "name")
     private String name;
+
+    @Column(unique = true, nullable = false, length = 2048, name = "email")
+    private String email;
+
+    @Column(unique = true, nullable = false, name = "id")
+    private String userId;
+
+    @Column(unique = true, nullable = false, name = "id")
+    private String password;
+
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50, name = "devPart")
@@ -21,14 +33,12 @@ public class User {
     @Column(nullable = false, length = 2048, name = "portfolio")
     private String portfolio;
 
-    @Column(nullable = false, length = 2048, unique = true, name = "email")
-    private String email;
-
-    @Column(nullable = false, length = 2048, name = "image")
-    private String image;
 
     @Column(nullable = false, length = 2048, name = "introduction")
     private String introduction;
+
+    @Column(nullable = false, length = 50, name = "department")
+    private String department;
 
     @Column(nullable = false, name = "graduation")
     private Boolean graduation;
@@ -36,7 +46,4 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "role")
     private Role role;
-
-    @Column(nullable = false, length = 50, name = "department")
-    private String department;
 }
