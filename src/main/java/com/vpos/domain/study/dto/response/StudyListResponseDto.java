@@ -2,7 +2,7 @@ package com.vpos.domain.study.dto.response;
 
 import java.time.LocalDate;
 
-public record StudyListResponse(
+public record StudyListResponseDto(
         Long id,
         String title,
         int personnel,
