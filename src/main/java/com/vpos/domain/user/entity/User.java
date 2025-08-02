@@ -11,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @Column(nullable = false, name = "name")
     private String name;
@@ -19,10 +19,10 @@ public class User {
     @Column(unique = true, nullable = false, length = 2048, name = "email")
     private String email;
 
-    @Column(unique = true, nullable = false, name = "id")
+    @Column(unique = true, nullable = false, name = "user_id")
     private String userId;
 
-    @Column(unique = true, nullable = false, name = "id")
+    @Column(unique = true, nullable = false, name = "password")
     private String password;
 
 
