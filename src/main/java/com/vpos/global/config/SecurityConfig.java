@@ -1,22 +1,31 @@
 package com.vpos.global.config;
 
+import com.vpos.global.jwt.filter.JwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // CSRF 비활성화
-                .formLogin(form -> form.disable()) // 기본 로그인 폼 비활성화
-                .httpBasic(httpBasic -> httpBasic.disable()) // HTTP Basic 인증 비활성화
+                .csrf(csrf -> csrf.disable())
+                .formLogin(form -> form.disable())
+                .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // 모든 요청 허용
-                );
+                        .requestMatchers("/api/users/test").authenticated() // 인증 필요
+                        .anyRequest().permitAll() // 그 외는 허용
+                )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
