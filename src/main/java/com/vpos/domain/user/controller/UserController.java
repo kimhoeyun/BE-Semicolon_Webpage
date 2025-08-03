@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<JwtResponseDto> signup(@RequestBody LoginRequestDto loginRequest) {
+    public ResponseEntity<JwtResponseDto> login(@RequestBody LoginRequestDto loginRequest) {
         JwtResponseDto jwtResponseDto = signUpService.login(loginRequest);
         return ResponseEntity.ok(jwtResponseDto);
     }
