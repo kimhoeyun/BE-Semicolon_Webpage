@@ -1,6 +1,7 @@
 package com.vpos.domain.study.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,4 +34,20 @@ public class Study {
 
     @Column(nullable = false, name = "studyEnd")
     private LocalDate studyEnd;
+
+    @Builder
+    public Study(String title, int personnel, String content,
+                 LocalDate recruitStart, LocalDate recruitEnd,
+                 LocalDate studyStart, LocalDate studyEnd) {
+        this.title = title;
+        this.personnel = personnel;
+        this.content = content;
+        this.recruitStart = recruitStart;
+        this.recruitEnd = recruitEnd;
+        this.studyStart = studyStart;
+        this.studyEnd = studyEnd;
+    }
+
+    // JPA 기본 생성자
+    protected Study() {}
 }

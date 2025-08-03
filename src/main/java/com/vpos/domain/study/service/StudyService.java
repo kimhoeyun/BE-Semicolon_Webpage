@@ -1,5 +1,6 @@
 package com.vpos.domain.study.service;
 
+import com.vpos.domain.study.dto.request.StudyCreateRequestDto;
 import com.vpos.domain.study.dto.response.StudyDetailResponseDto;
 import com.vpos.domain.study.dto.response.StudyListResponseDto;
 import com.vpos.domain.study.entity.Study;
@@ -44,5 +45,20 @@ public class StudyService {
                 study.getStudyEnd(),
                 study.getContent()
         );
+    }
+
+    public Long createNewStudy(StudyCreateRequestDto studyCreateRequest) {
+        Study study = Study.builder()
+                .title(studyCreateRequest.title())
+                .personnel(studyCreateRequest.personnel())
+                .content(studyCreateRequest.content())
+                .recruitStart(studyCreateRequest.recruitStart())
+                .recruitEnd(studyCreateRequest.recruitEnd())
+                .studyStart(studyCreateRequest.studyStart())
+                .studyEnd(studyCreateRequest.studyEnd())
+                .build();
+
+        Study saved = studyRepository.save(study);
+        return saved.getId();
     }
 }
