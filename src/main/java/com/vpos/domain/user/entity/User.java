@@ -6,6 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
+@Table(name="users")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,22 +26,21 @@ public class User {
     @Column(unique = true, nullable = false, name = "password")
     private String password;
 
-
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50, name = "devPart")
+    @Column(length = 50, name = "devPart")
     private DevPart devpart;
 
-    @Column(nullable = false, length = 2048, name = "portfolio")
+    @Column(length = 2048, name = "portfolio")
     private String portfolio;
 
 
-    @Column(nullable = false, length = 2048, name = "introduction")
+    @Column(length = 2048, name = "introduction")
     private String introduction;
 
-    @Column(nullable = false, length = 50, name = "department")
+    @Column(length = 50, name = "department")
     private String department;
 
-    @Column(nullable = false, name = "graduation")
+    @Column(name = "graduation")
     private Boolean graduation;
 
     @Enumerated(EnumType.STRING)

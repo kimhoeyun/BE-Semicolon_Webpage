@@ -1,16 +1,20 @@
 package com.vpos.domain.user.service;
 
+import com.vpos.domain.user.dto.request.LoginRequestDto;
 import com.vpos.domain.user.dto.request.SignUpRequestDto;
+import com.vpos.domain.user.entity.Role;
 import com.vpos.domain.user.entity.User;
 import com.vpos.domain.user.repository.UserRepository;
-import com.vpos.global.email.repository.VerificationCodeRepository;
+import com.vpos.global.jwt.dto.response.AuthDto;
+import com.vpos.global.jwt.dto.response.JwtResponseDto;
+import com.vpos.global.jwt.service.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -18,7 +22,7 @@ import java.util.Optional;
 public class SignUpService {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final UserRepository userRepository;
-    private final VerificationCodeRepository verificationCodeRepository;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public User register(SignUpRequestDto signUpDto) {
@@ -42,6 +46,7 @@ public class SignUpService {
                 .email(signUpDto.getEmail())
                 .userId(signUpDto.getUserId())
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
+                .role(Role.USER)
                 .build();
 
         return userRepository.save(user);
@@ -81,5 +86,21 @@ public class SignUpService {
         if (!password.matches(pwRegex)) {
             throw new IllegalArgumentException("비밀번호는 8자 이상이며, 영문, 숫자, 특수문자를 모두 포함해야 합니다.");
         }
+    }
+
+    public JwtResponseDto login(LoginRequestDto loginRequest) {
+        User user = userRepository.findByUserId(loginRequest.userId())
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원 정보입니다."));
+
+        if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        String accessToken = jwtProvider
+                .createAccessToken(String.valueOf(user.getId()), user.getUserId(), String.valueOf(Role.USER));
+        AuthDto.RefreshTokenWithExpiry refreshTokenWithExpiry = jwtProvider.createRefreshToken(String.valueOf(user.getId()));
+        String refreshToken = refreshTokenWithExpiry.token();
+
+        return new JwtResponseDto(accessToken, refreshToken);
     }
 }
