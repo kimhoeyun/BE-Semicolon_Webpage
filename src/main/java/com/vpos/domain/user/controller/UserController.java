@@ -2,18 +2,23 @@ package com.vpos.domain.user.controller;
 
 import com.vpos.domain.user.dto.request.LoginRequestDto;
 import com.vpos.domain.user.dto.request.SignUpRequestDto;
+import com.vpos.domain.user.dto.response.UserDetailResponseDto;
 import com.vpos.domain.user.entity.User;
 import com.vpos.domain.user.service.SignUpService;
+import com.vpos.domain.user.service.UserService;
 import com.vpos.global.jwt.dto.response.JwtResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
     private final SignUpService signUpService;
+    private final UserService userService;
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody SignUpRequestDto userRequest) {
@@ -30,6 +35,12 @@ public class UserController {
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("good");
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<UserDetailResponseDto>> getUserList() {
+        List<UserDetailResponseDto> userList = userService.viewUserList();
+        return ResponseEntity.ok(userList);
     }
 
 }
