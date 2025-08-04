@@ -1,6 +1,7 @@
 package com.vpos.domain.project.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,4 +34,19 @@ public class Project {
 
     @Column(nullable = false, name = "projectEnd")
     private LocalDate projectEnd;
+
+    @Builder
+    public Project(String title, int personnel, String content,
+                 LocalDate recruitStart, LocalDate recruitEnd,
+                 LocalDate projectStart, LocalDate projectEnd) {
+        this.title = title;
+        this.personnel = personnel;
+        this.content = content;
+        this.recruitStart = recruitStart;
+        this.recruitEnd = recruitEnd;
+        this.projectStart = projectStart;
+        this.projectEnd = projectEnd;
+    }
+
+    protected Project() {}
 }
