@@ -48,6 +48,5 @@ public class Study {
         this.studyEnd = studyEnd;
     }
 
-    // JPA 기본 생성자
     protected Study() {}
 }
