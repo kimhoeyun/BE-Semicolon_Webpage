@@ -1,9 +1,11 @@
 package com.vpos.domain.study.controller;
 
+import com.vpos.domain.study.dto.request.StudyApplyRequestDto;
 import com.vpos.domain.study.dto.request.StudyCreateRequestDto;
 import com.vpos.domain.study.dto.response.StudyDetailResponseDto;
 import com.vpos.domain.study.dto.response.StudyListResponseDto;
 import com.vpos.domain.study.service.StudyService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,5 +35,12 @@ public class StudyController {
     public ResponseEntity<Void> postStudy(@RequestBody StudyCreateRequestDto StudyCreateRequest) {
         studyService.createNewStudy(StudyCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build(); // 201 Created
+    }
+
+    @PostMapping("/{studyId}/apply")
+    public ResponseEntity<Long> applyToStudy(@PathVariable Long studyId,
+                                             @RequestBody @Valid StudyApplyRequestDto studyApplyRequest) {
+        Long applicationId = studyService.applyStudy(studyId, studyApplyRequest);
+        return ResponseEntity.ok(applicationId);
     }
 }
