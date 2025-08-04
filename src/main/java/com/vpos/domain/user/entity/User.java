@@ -28,7 +28,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 50, name = "devPart")
-    private DevPart devpart;
+    private DevPart devPart;
 
     @Column(length = 2048, name = "portfolio")
     private String portfolio;
@@ -48,4 +48,18 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "role")
     private Role role;
+
+    @Builder
+    public User(String name, Boolean graduation,
+                DevPart devPart, String phoneNumber,
+                String portfolio, String introduction) {
+        this.name = name;
+        this.graduation = graduation;
+        this.devPart = devPart;
+        this.phoneNumber = phoneNumber;
+        this.portfolio = portfolio;
+        this.introduction = introduction;
+    }
+
+    protected User() {}
 }
