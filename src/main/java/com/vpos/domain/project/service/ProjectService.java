@@ -1,5 +1,6 @@
 package com.vpos.domain.project.service;
 
+import com.vpos.domain.project.dto.request.ProjectCreateRequestDto;
 import com.vpos.domain.project.dto.response.ProjectDetailResponseDto;
 import com.vpos.domain.project.dto.response.ProjectListResponseDto;
 import com.vpos.domain.project.entity.Project;
@@ -44,5 +45,20 @@ public class ProjectService {
                 project.getProjectEnd(),
                 project.getContent()
         );
+    }
+
+    public long createNewProject(ProjectCreateRequestDto projectCreateRequest) {
+        Project project = Project.builder()
+                .title(projectCreateRequest.title())
+                .personnel(projectCreateRequest.personnel())
+                .recruitStart(projectCreateRequest.recruitStart())
+                .recruitEnd(projectCreateRequest.recruitEnd())
+                .projectStart(projectCreateRequest.projectStart())
+                .projectEnd(projectCreateRequest.projectEnd())
+                .content(projectCreateRequest.content())
+                .build();
+
+        Project saved = projectRepository.save(project);
+        return saved.getId();
     }
 }
