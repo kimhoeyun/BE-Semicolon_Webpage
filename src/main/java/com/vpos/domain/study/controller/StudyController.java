@@ -1,14 +1,13 @@
 package com.vpos.domain.study.controller;
 
+import com.vpos.domain.study.dto.request.StudyCreateRequestDto;
 import com.vpos.domain.study.dto.response.StudyDetailResponseDto;
 import com.vpos.domain.study.dto.response.StudyListResponseDto;
 import com.vpos.domain.study.service.StudyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +27,11 @@ public class StudyController {
     @GetMapping("/{id}")
     public ResponseEntity<StudyDetailResponseDto> getStudyDetail(@PathVariable Long id) {
         return ResponseEntity.ok(studyService.viewStudyDetail(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> postStudy(@RequestBody StudyCreateRequestDto StudyCreateRequest) {
+        studyService.createNewStudy(StudyCreateRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build(); // 201 Created
     }
 }
