@@ -6,8 +6,10 @@ import com.vpos.domain.user.entity.User;
 import com.vpos.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -40,5 +42,13 @@ public class UserService {
 
         User saved = userRepository.save(user);
         return saved.getId();
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("해당 회원이 존재하지 않습니다."));
+
+        userRepository.delete(user);
     }
 }
