@@ -2,12 +2,14 @@ package com.vpos.domain.user.controller;
 
 import com.vpos.domain.user.dto.request.LoginRequestDto;
 import com.vpos.domain.user.dto.request.SignUpRequestDto;
+import com.vpos.domain.user.dto.request.UserCreateRequestDto;
 import com.vpos.domain.user.dto.response.UserDetailResponseDto;
 import com.vpos.domain.user.entity.User;
 import com.vpos.domain.user.service.SignUpService;
 import com.vpos.domain.user.service.UserService;
 import com.vpos.global.jwt.dto.response.JwtResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,4 +45,9 @@ public class UserController {
         return ResponseEntity.ok(userList);
     }
 
+    @PostMapping
+    public ResponseEntity<Void> postUser(@RequestBody UserCreateRequestDto UserCreateRequest) {
+        userService.createNewUser(UserCreateRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }
