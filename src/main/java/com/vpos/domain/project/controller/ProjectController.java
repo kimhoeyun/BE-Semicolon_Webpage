@@ -1,8 +1,11 @@
 package com.vpos.domain.project.controller;
 
+import com.vpos.domain.project.dto.request.ProjectApplyRequestDto;
 import com.vpos.domain.project.dto.request.ProjectCreateRequestDto;
+import com.vpos.domain.project.dto.response.ProjectDetailResponseDto;
 import com.vpos.domain.project.dto.response.ProjectListResponseDto;
 import com.vpos.domain.project.service.ProjectService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +27,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProjectListResponseDto> getProjectDetail(@PathVariable Long id) {
+    public ResponseEntity<ProjectDetailResponseDto> getProjectDetail(@PathVariable Long id) {
         return ResponseEntity.ok(projectService.viewProjectDetail(id));
     }
 
@@ -32,5 +35,12 @@ public class ProjectController {
     public ResponseEntity<Void> postProject(@RequestBody ProjectCreateRequestDto ProjectCreateRequest) {
         projectService.createNewProject(ProjectCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build(); // 201 Created
+    }
+
+    @PostMapping("/{projectId}/apply")
+    public ResponseEntity<Long> applyToProject(@PathVariable Long projectId,
+                                             @RequestBody @Valid ProjectApplyRequestDto ProjectApplyRequest) {
+        Long applicationId = projectService.applyProject(projectId, ProjectApplyRequest);
+        return ResponseEntity.ok(applicationId);
     }
 }

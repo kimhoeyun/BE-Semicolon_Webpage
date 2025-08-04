@@ -52,6 +52,7 @@ public class StudyService {
         );
     }
 
+    @Transactional
     public Long createNewStudy(StudyCreateRequestDto studyCreateRequest) {
         Study study = Study.builder()
                 .title(studyCreateRequest.title())

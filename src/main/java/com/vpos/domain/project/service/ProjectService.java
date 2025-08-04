@@ -1,12 +1,16 @@
 package com.vpos.domain.project.service;
 
+import com.vpos.domain.project.dto.request.ProjectApplyRequestDto;
 import com.vpos.domain.project.dto.request.ProjectCreateRequestDto;
 import com.vpos.domain.project.dto.response.ProjectDetailResponseDto;
 import com.vpos.domain.project.dto.response.ProjectListResponseDto;
 import com.vpos.domain.project.entity.Project;
+import com.vpos.domain.project.entity.ProjectApplication;
+import com.vpos.domain.project.repository.ProjectApplicationRepository;
 import com.vpos.domain.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -16,6 +20,7 @@ import java.util.NoSuchElementException;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final ProjectApplicationRepository projectApplicationRepository;
 
     public List<ProjectListResponseDto> viewProjectList() {
         return projectRepository.findAll().stream()
@@ -47,7 +52,8 @@ public class ProjectService {
         );
     }
 
-    public long createNewProject(ProjectCreateRequestDto projectCreateRequest) {
+    @Transactional
+    public Long createNewProject(ProjectCreateRequestDto projectCreateRequest) {
         Project project = Project.builder()
                 .title(projectCreateRequest.title())
                 .personnel(projectCreateRequest.personnel())
@@ -60,5 +66,23 @@ public class ProjectService {
 
         Project saved = projectRepository.save(project);
         return saved.getId();
+    }
+
+
+    @Transactional
+    public Long applyProject(Long projectId, ProjectApplyRequestDto projectApplyRequest) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NoSuchElementException("해당 프로젝트를 찾을 수 없습니다."));
+
+        ProjectApplication projectApplication = ProjectApplication.builder()
+                .name(projectApplyRequest.name())
+                .phoneNumber(projectApplyRequest.phoneNumber())
+                .motivation(projectApplyRequest.motivation())
+                .portfolio(projectApplyRequest.portfolio())
+                .tool(projectApplyRequest.tool())
+                .project(project)
+                .build();
+
+        return projectApplicationRepository.save(projectApplication).getId(); // 실제 저장 누락되어 있었음
     }
 }
