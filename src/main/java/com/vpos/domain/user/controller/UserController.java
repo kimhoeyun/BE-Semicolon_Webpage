@@ -3,14 +3,18 @@ package com.vpos.domain.user.controller;
 import com.vpos.domain.user.dto.request.LoginRequestDto;
 import com.vpos.domain.user.dto.request.SignUpRequestDto;
 import com.vpos.domain.user.dto.request.UserCreateRequestDto;
+import com.vpos.domain.user.dto.request.UserUpdateRequestDto;
 import com.vpos.domain.user.dto.response.UserDetailResponseDto;
 import com.vpos.domain.user.entity.User;
 import com.vpos.domain.user.service.SignUpService;
 import com.vpos.domain.user.service.UserService;
+import com.vpos.global.jwt.CustomUserDetails;
 import com.vpos.global.jwt.dto.response.JwtResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,14 +50,15 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> postUser(@RequestBody UserCreateRequestDto UserCreateRequest) {
-        userService.createNewUser(UserCreateRequest);
+    public ResponseEntity<Void> postUser(@RequestBody UserCreateRequestDto userCreateRequest) {
+        userService.createNewUser(userCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("/admin/users/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
-        userService.deleteUser(userId);
-        return ResponseEntity.noContent().build();
+    @PatchMapping("/user")
+    public ResponseEntity<Void> patchUser(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                             @RequestBody @Valid UserUpdateRequestDto userUpdateRequest) {
+        Long userId = userDetails.getId();
+        userService.updateUser(userId, userUpdateRequest);
     }
 }
