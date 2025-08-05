@@ -60,5 +60,12 @@ public class UserController {
                                              @RequestBody @Valid UserUpdateRequestDto userUpdateRequest) {
         Long userId = userDetails.getId();
         userService.updateUser(userId, userUpdateRequest);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/admin/users/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
