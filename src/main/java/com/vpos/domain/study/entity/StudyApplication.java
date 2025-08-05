@@ -16,6 +16,8 @@ public class StudyApplication {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long userId;
+
     private String name;
 
     private String phoneNumber;
@@ -28,20 +30,22 @@ public class StudyApplication {
     private List<String> tool;
 
     @Enumerated(EnumType.STRING)
-    private ApplyStatus applyStatus;
+    private ApplyStatus applyStatus = ApplyStatus.WAITING;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "study_id")
     private Study study;
 
     @Builder
-    public StudyApplication(String name, String phoneNumber, String motivation,
+    public StudyApplication(Long userId, String name, String phoneNumber, String motivation,
                             String portfolio, List<String> tool) {
+        this.userId = userId;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.motivation = motivation;
         this.portfolio = portfolio;
         this.tool = tool;
+        this.applyStatus = ApplyStatus.WAITING;
     }
 
     protected StudyApplication() {}
