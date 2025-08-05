@@ -57,4 +57,11 @@ public class UserService {
         user.setPortfolio(UserUpdateRequest.portfolio());
         user.setIntroduction(UserUpdateRequest.introduction());
     }
+
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("해당 회원이 존재하지 않습니다."));
+
+        userRepository.delete(user);
+    }
 }

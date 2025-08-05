@@ -23,6 +23,7 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/test").authenticated() // 인증 필요
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll() // 그 외는 허용
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
