@@ -80,21 +80,25 @@ public class UserService {
         List<UserAppyPermitResponseDto> result = new ArrayList<>();
 
         for (StudyApplication app : studyApps) {
-            result.add(new UserAppyPermitResponseDto(
-                    app.getId(),
-                    app.getStudy().getTitle(),
-                    "STUDY",
-                    app.getApplyStatus().name()
-            ));
+            if (app.getStudy() != null) {
+                result.add(new UserAppyPermitResponseDto(
+                        app.getId(),
+                        app.getStudy().getTitle(),
+                        "STUDY",
+                        app.getApplyStatus().name()
+                ));
+            }
         }
 
         for (ProjectApplication app : projectApps) {
-            result.add(new UserAppyPermitResponseDto(
-                    app.getId(),
-                    app.getProject().getTitle(),
-                    "PROJECT",
-                    app.getApplyStatus().name()
-            ));
+            if (app.getProject() != null) {
+                result.add(new UserAppyPermitResponseDto(
+                        app.getId(),
+                        app.getProject().getTitle(),
+                        "PROJECT",
+                        app.getApplyStatus().name()
+                ));
+            }
         }
 
         return result;
