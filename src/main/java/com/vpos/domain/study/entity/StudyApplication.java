@@ -1,7 +1,10 @@
 package com.vpos.domain.study.entity;
 
+import com.vpos.domain.user.entity.ApplyStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -23,6 +26,9 @@ public class StudyApplication {
 
     @ElementCollection
     private List<String> tool;
+
+    @Enumerated(EnumType.STRING)
+    private ApplyStatus applyStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "study_id")

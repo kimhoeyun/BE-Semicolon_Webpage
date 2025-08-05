@@ -1,7 +1,12 @@
 package com.vpos.domain.user.service;
 
+import com.vpos.domain.project.entity.ProjectApplication;
+import com.vpos.domain.project.repository.ProjectApplicationRepository;
+import com.vpos.domain.study.entity.StudyApplication;
+import com.vpos.domain.study.repository.StudyApplicationRepository;
 import com.vpos.domain.user.dto.request.UserCreateRequestDto;
 import com.vpos.domain.user.dto.request.UserUpdateRequestDto;
+import com.vpos.domain.user.dto.response.UserAppyPermitResponseDto;
 import com.vpos.domain.user.dto.response.UserDetailResponseDto;
 import com.vpos.domain.user.entity.User;
 import com.vpos.domain.user.repository.UserRepository;
@@ -9,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -17,6 +23,8 @@ import java.util.NoSuchElementException;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final StudyApplicationRepository studyApplicationRepository;
+    private final ProjectApplicationRepository projectApplicationRepository;
 
     public List<UserDetailResponseDto> viewUserList() {
         return userRepository.findAll().stream()
@@ -63,5 +71,32 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchElementException("해당 회원이 존재하지 않습니다."));
 
         userRepository.delete(user);
+    }
+
+    public List<UserAppyPermitResponseDto> getMyApplications(Long userId) {
+        List<StudyApplication> studyApps = studyApplicationRepository.findAllByUserId(userId);
+        List<ProjectApplication> projectApps = projectApplicationRepository.findAllByUserId(userId);
+
+        List<UserAppyPermitResponseDto> result = new ArrayList<>();
+
+        for (StudyApplication app : studyApps) {
+            result.add(new UserAppyPermitResponseDto(
+                    app.getId(),
+                    app.getStudy().getTitle(),
+                    "STUDY",
+                    app.getApplyStatus().name()
+            ));
+        }
+
+        for (ProjectApplication app : projectApps) {
+            result.add(new UserAppyPermitResponseDto(
+                    app.getId(),
+                    app.getProject().getTitle(),
+                    "PROJECT",
+                    app.getApplyStatus().name()
+            ));
+        }
+
+        return result;
     }
 }

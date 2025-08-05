@@ -1,5 +1,6 @@
 package com.vpos.domain.project.entity;
 
+import com.vpos.domain.user.entity.ApplyStatus;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,9 @@ public class ProjectApplication {
 
     @ElementCollection
     private List<String> tool;
+
+    @Enumerated(EnumType.STRING)
+    private ApplyStatus applyStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
