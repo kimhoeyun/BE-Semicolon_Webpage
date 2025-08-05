@@ -60,6 +60,5 @@ public class UserController {
                                              @RequestBody @Valid UserUpdateRequestDto userUpdateRequest) {
         Long userId = userDetails.getId();
         userService.updateUser(userId, userUpdateRequest);
-        return ResponseEntity.noContent().build();
     }
 }
