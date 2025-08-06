@@ -8,7 +8,9 @@ import com.vpos.domain.study.entity.Study;
 import com.vpos.domain.study.entity.StudyApplication;
 import com.vpos.domain.study.repository.StudyApplicationRepository;
 import com.vpos.domain.study.repository.StudyRepository;
+import com.vpos.domain.user.entity.ApplyStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,5 +85,21 @@ public class StudyService {
                 .build();
 
         return studyApplicationRepository.save(studyApplication).getId();
+    }
+
+    @Transactional
+    public void cancelStudyApplication(Long userId, Long applicationId) {
+        StudyApplication studyApplication = studyApplicationRepository.findById(applicationId)
+                .orElseThrow(() -> new NoSuchElementException("신청 내역을 찾을 수 없습니다."));
+
+        if (!studyApplication.getUserId().equals(userId)) {
+            throw new AccessDeniedException("본인의 신청만 취소할 수 있습니다.");
+        }
+
+        if (studyApplication.getApplyStatus() != ApplyStatus.WAITING) {
+            throw new IllegalStateException("대기 상태인 신청만 취소할 수 있습니다.");
+        }
+
+        studyApplicationRepository.delete(studyApplication);
     }
 }

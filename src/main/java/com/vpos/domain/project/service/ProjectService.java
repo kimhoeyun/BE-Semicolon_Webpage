@@ -8,7 +8,9 @@ import com.vpos.domain.project.entity.Project;
 import com.vpos.domain.project.entity.ProjectApplication;
 import com.vpos.domain.project.repository.ProjectApplicationRepository;
 import com.vpos.domain.project.repository.ProjectRepository;
+import com.vpos.domain.user.entity.ApplyStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,5 +86,21 @@ public class ProjectService {
                 .build();
 
         return projectApplicationRepository.save(projectApplication).getId(); // 실제 저장 누락되어 있었음
+    }
+
+    @Transactional
+    public void cancelProjectApplication(Long userId, Long applicationId) {
+        ProjectApplication projectApplication = projectApplicationRepository.findById(applicationId)
+                .orElseThrow(() -> new NoSuchElementException("신청 내역을 찾을 수 없습니다."));
+
+        if (!projectApplication.getUserId().equals(userId)) {
+            throw new AccessDeniedException("본인의 신청만 취소할 수 있습니다.");
+        }
+
+        if (projectApplication.getApplyStatus() != ApplyStatus.WAITING) {
+            throw new IllegalStateException("대기 상태인 신청만 취소할 수 있습니다.");
+        }
+
+        projectApplicationRepository.delete(projectApplication);
     }
 }

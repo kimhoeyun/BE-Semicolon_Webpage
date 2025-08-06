@@ -5,10 +5,12 @@ import com.vpos.domain.study.dto.request.StudyCreateRequestDto;
 import com.vpos.domain.study.dto.response.StudyDetailResponseDto;
 import com.vpos.domain.study.dto.response.StudyListResponseDto;
 import com.vpos.domain.study.service.StudyService;
+import com.vpos.global.jwt.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,5 +44,14 @@ public class StudyController {
                                              @RequestBody @Valid StudyApplyRequestDto studyApplyRequest) {
         Long applicationId = studyService.applyStudy(studyId, studyApplyRequest);
         return ResponseEntity.ok(applicationId);
+    }
+
+    @DeleteMapping("/me/study-applications/{applicationId}")
+    public ResponseEntity<Void> cancelMyStudyApplication(
+            @PathVariable Long applicationId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        studyService.cancelStudyApplication(userDetails.getId(), applicationId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
