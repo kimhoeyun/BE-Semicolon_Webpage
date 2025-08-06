@@ -1,6 +1,7 @@
 package com.vpos.domain.project.repository;
 
 import com.vpos.domain.project.entity.ProjectApplication;
+import com.vpos.domain.user.entity.ApplyStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -8,4 +9,6 @@ import java.util.List;
 public interface ProjectApplicationRepository extends JpaRepository<ProjectApplication, Long> {
 
     List<ProjectApplication> findAllByUserId(Long userId);
+
+    long countByProjectIdAndApplyStatus(Long projectId, ApplyStatus applyStatus);
 }
