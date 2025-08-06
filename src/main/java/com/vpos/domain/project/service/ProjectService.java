@@ -106,8 +106,8 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public ProjectApplicantResponseDto getApplicationReview(Long studyId, Long applicationId, Long reviewerId) {
-        Project project = projectRepository.findById(studyId)
+    public ProjectApplicantResponseDto getApplicationReview(Long projectId, Long applicationId, Long reviewerId) {
+        Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("프로젝트 찾을 수 없습니다."));
 
         if (!project.getWriterId().equals(reviewerId)) {
