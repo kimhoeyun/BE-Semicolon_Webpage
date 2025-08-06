@@ -32,8 +32,8 @@ public class StudyApplication {
     @Enumerated(EnumType.STRING)
     private ApplyStatus applyStatus = ApplyStatus.WAITING;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "study_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "study_id", nullable = false)
     private Study study;
 
     @Builder

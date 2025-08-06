@@ -4,7 +4,8 @@ import com.vpos.domain.user.dto.request.LoginRequestDto;
 import com.vpos.domain.user.dto.request.SignUpRequestDto;
 import com.vpos.domain.user.dto.request.UserCreateRequestDto;
 import com.vpos.domain.user.dto.request.UserUpdateRequestDto;
-import com.vpos.domain.user.dto.response.UserAppyPermitResponseDto;
+import com.vpos.domain.user.dto.response.UserApplicationDetailResponseDto;
+import com.vpos.domain.user.dto.response.UserApplyPermitResponseDto;
 import com.vpos.domain.user.dto.response.UserDetailResponseDto;
 import com.vpos.domain.user.entity.User;
 import com.vpos.domain.user.service.SignUpService;
@@ -71,9 +72,23 @@ public class UserController {
     }
 
     @GetMapping("/me/applications")
-    public ResponseEntity<List<UserAppyPermitResponseDto>> getMyApplications(
+    public ResponseEntity<List<UserApplyPermitResponseDto>> getMyApplications(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getId();
         return ResponseEntity.ok(userService.getMyApplications(userId));
+    }
+
+    @GetMapping("/me/study-applications/{id}")
+    public ResponseEntity<UserApplicationDetailResponseDto> getMyStudyApplication(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long id) {
+        return ResponseEntity.ok(userService.getMyStudyApplication(userDetails.getId(), id));
+    }
+
+    @GetMapping("/me/project-applications/{id}")
+    public ResponseEntity<UserApplicationDetailResponseDto> getMyProjectApplication(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long id) {
+        return ResponseEntity.ok(userService.getMyProjectApplication(userDetails.getId(), id));
     }
 }

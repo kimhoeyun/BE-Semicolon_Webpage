@@ -33,8 +33,8 @@ public class ProjectApplication {
     @Enumerated(EnumType.STRING)
     private ApplyStatus applyStatus = ApplyStatus.WAITING;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
     @Builder
