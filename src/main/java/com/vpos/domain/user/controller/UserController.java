@@ -1,9 +1,6 @@
 package com.vpos.domain.user.controller;
 
-import com.vpos.domain.user.dto.request.LoginRequestDto;
-import com.vpos.domain.user.dto.request.SignUpRequestDto;
-import com.vpos.domain.user.dto.request.UserCreateRequestDto;
-import com.vpos.domain.user.dto.request.UserUpdateRequestDto;
+import com.vpos.domain.user.dto.request.*;
 import com.vpos.domain.user.dto.response.UserApplicationDetailResponseDto;
 import com.vpos.domain.user.dto.response.UserApplyPermitResponseDto;
 import com.vpos.domain.user.dto.response.UserDetailResponseDto;
@@ -90,5 +87,16 @@ public class UserController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long id) {
         return ResponseEntity.ok(userService.getMyProjectApplication(userDetails.getId(), id));
+    }
+
+    @PatchMapping("/{postId}/{applicationId}")
+    public ResponseEntity<Void> decideApplication(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long postId,
+            @PathVariable Long applicationId,
+            @RequestBody @Valid UserApplicationDecisionRequestDto userApplicationDecisionRequest) {
+
+        userService.decideApplication(userDetails.getId(), postId, applicationId, userApplicationDecisionRequest);
+        return ResponseEntity.noContent().build();
     }
 }
