@@ -5,10 +5,12 @@ import com.vpos.domain.project.dto.request.ProjectCreateRequestDto;
 import com.vpos.domain.project.dto.response.ProjectDetailResponseDto;
 import com.vpos.domain.project.dto.response.ProjectListResponseDto;
 import com.vpos.domain.project.service.ProjectService;
+import com.vpos.global.jwt.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,5 +44,14 @@ public class ProjectController {
                                              @RequestBody @Valid ProjectApplyRequestDto ProjectApplyRequest) {
         Long applicationId = projectService.applyProject(projectId, ProjectApplyRequest);
         return ResponseEntity.ok(applicationId);
+    }
+
+    @DeleteMapping("/me/project-applications/{applicationId}")
+    public ResponseEntity<Void> cancelMyProjectApplication(
+            @PathVariable Long applicationId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        projectService.cancelProjectApplication(userDetails.getId(), applicationId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
