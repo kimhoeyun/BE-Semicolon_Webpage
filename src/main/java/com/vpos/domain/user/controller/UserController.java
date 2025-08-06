@@ -4,6 +4,7 @@ import com.vpos.domain.user.dto.request.LoginRequestDto;
 import com.vpos.domain.user.dto.request.SignUpRequestDto;
 import com.vpos.domain.user.dto.request.UserCreateRequestDto;
 import com.vpos.domain.user.dto.request.UserUpdateRequestDto;
+import com.vpos.domain.user.dto.response.UserAppyPermitResponseDto;
 import com.vpos.domain.user.dto.response.UserDetailResponseDto;
 import com.vpos.domain.user.entity.User;
 import com.vpos.domain.user.service.SignUpService;
@@ -67,5 +68,12 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/me/applications")
+    public ResponseEntity<List<UserAppyPermitResponseDto>> getMyApplications(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails.getId();
+        return ResponseEntity.ok(userService.getMyApplications(userId));
     }
 }

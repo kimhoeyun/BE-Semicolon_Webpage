@@ -1,5 +1,6 @@
 package com.vpos.domain.project.entity;
 
+import com.vpos.domain.user.entity.ApplyStatus;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,8 @@ public class ProjectApplication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long userId;
+
     private String name;
 
     private String phoneNumber;
@@ -27,18 +30,23 @@ public class ProjectApplication {
     @ElementCollection
     private List<String> tool;
 
+    @Enumerated(EnumType.STRING)
+    private ApplyStatus applyStatus = ApplyStatus.WAITING;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
 
     @Builder
-    public ProjectApplication(String name, String phoneNumber, String motivation,
+    public ProjectApplication(Long userId, String name, String phoneNumber, String motivation,
                             String portfolio, List<String> tool) {
+        this.userId = userId;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.motivation = motivation;
         this.portfolio = portfolio;
         this.tool = tool;
+        this.applyStatus = ApplyStatus.WAITING;
     }
 
     protected ProjectApplication() {}
