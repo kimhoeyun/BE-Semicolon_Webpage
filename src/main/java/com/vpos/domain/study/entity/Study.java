@@ -35,10 +35,14 @@ public class Study {
     @Column(nullable = false, name = "studyEnd")
     private LocalDate studyEnd;
 
+    @Column(nullable = false)
+    private Long writerId;
+
     @Builder
     public Study(String title, int personnel, String content,
                  LocalDate recruitStart, LocalDate recruitEnd,
-                 LocalDate studyStart, LocalDate studyEnd) {
+                 LocalDate studyStart, LocalDate studyEnd,
+                 Long writerId) {
         this.title = title;
         this.personnel = personnel;
         this.content = content;
@@ -46,6 +50,7 @@ public class Study {
         this.recruitEnd = recruitEnd;
         this.studyStart = studyStart;
         this.studyEnd = studyEnd;
+        this.writerId = writerId;
     }
 
     protected Study() {}

@@ -35,10 +35,13 @@ public class Project {
     @Column(nullable = false, name = "projectEnd")
     private LocalDate projectEnd;
 
+    @Column(nullable = false)
+    private Long writerId;
+
     @Builder
     public Project(String title, int personnel, String content,
                  LocalDate recruitStart, LocalDate recruitEnd,
-                 LocalDate projectStart, LocalDate projectEnd) {
+                 LocalDate projectStart, LocalDate projectEnd, Long writerId) {
         this.title = title;
         this.personnel = personnel;
         this.content = content;
@@ -46,6 +49,7 @@ public class Project {
         this.recruitEnd = recruitEnd;
         this.projectStart = projectStart;
         this.projectEnd = projectEnd;
+        this.writerId = writerId;
     }
 
     protected Project() {}

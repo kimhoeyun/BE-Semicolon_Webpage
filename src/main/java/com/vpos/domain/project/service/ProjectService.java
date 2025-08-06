@@ -2,6 +2,7 @@ package com.vpos.domain.project.service;
 
 import com.vpos.domain.project.dto.request.ProjectApplyRequestDto;
 import com.vpos.domain.project.dto.request.ProjectCreateRequestDto;
+import com.vpos.domain.project.dto.response.ProjectApplicantResponseDto;
 import com.vpos.domain.project.dto.response.ProjectDetailResponseDto;
 import com.vpos.domain.project.dto.response.ProjectListResponseDto;
 import com.vpos.domain.project.entity.Project;
@@ -102,5 +103,27 @@ public class ProjectService {
         }
 
         projectApplicationRepository.delete(projectApplication);
+    }
+
+    @Transactional(readOnly = true)
+    public ProjectApplicantResponseDto getApplicationReview(Long projectId, Long applicationId, Long reviewerId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NoSuchElementException("프로젝트 찾을 수 없습니다."));
+
+        if (!project.getWriterId().equals(reviewerId)) {
+            throw new AccessDeniedException("해당 프로젝트 작성자만 신청서를 조회할 수 있습니다.");
+        }
+
+        ProjectApplication projectApplication = projectApplicationRepository.findById(applicationId)
+                .orElseThrow(() -> new NoSuchElementException("지원서를 찾을 수 없습니다."));
+
+        return new ProjectApplicantResponseDto(
+                projectApplication.getName(),
+                projectApplication.getPhoneNumber(),
+                projectApplication.getPortfolio(),
+                projectApplication.getTool(),
+                projectApplication.getMotivation(),
+                projectApplication.getApplyStatus()
+        );
     }
 }

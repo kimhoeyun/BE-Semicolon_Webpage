@@ -2,6 +2,7 @@ package com.vpos.domain.study.service;
 
 import com.vpos.domain.study.dto.request.StudyApplyRequestDto;
 import com.vpos.domain.study.dto.request.StudyCreateRequestDto;
+import com.vpos.domain.study.dto.response.StudyApplicantResponseDto;
 import com.vpos.domain.study.dto.response.StudyDetailResponseDto;
 import com.vpos.domain.study.dto.response.StudyListResponseDto;
 import com.vpos.domain.study.entity.Study;
@@ -64,6 +65,7 @@ public class StudyService {
                 .recruitEnd(studyCreateRequest.recruitEnd())
                 .studyStart(studyCreateRequest.studyStart())
                 .studyEnd(studyCreateRequest.studyEnd())
+                .writerId(studyCreateRequest.writerId())
                 .build();
 
         Study saved = studyRepository.save(study);
@@ -101,5 +103,27 @@ public class StudyService {
         }
 
         studyApplicationRepository.delete(studyApplication);
+    }
+
+    @Transactional(readOnly = true)
+    public StudyApplicantResponseDto getApplicationReview(Long studyId, Long applicationId, Long reviewerId) {
+        Study study = studyRepository.findById(studyId)
+                .orElseThrow(() -> new NoSuchElementException("스터디를 찾을 수 없습니다."));
+
+        if (!study.getWriterId().equals(reviewerId)) {
+            throw new AccessDeniedException("해당 스터디 작성자만 신청서를 조회할 수 있습니다.");
+        }
+
+        StudyApplication studyApplication = studyApplicationRepository.findById(applicationId)
+                .orElseThrow(() -> new NoSuchElementException("지원서를 찾을 수 없습니다."));
+
+        return new StudyApplicantResponseDto(
+                studyApplication.getName(),
+                studyApplication.getPhoneNumber(),
+                studyApplication.getPortfolio(),
+                studyApplication.getTool(),
+                studyApplication.getMotivation(),
+                studyApplication.getApplyStatus()
+        );
     }
 }

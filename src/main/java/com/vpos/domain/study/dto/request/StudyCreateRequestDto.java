@@ -9,5 +9,6 @@ public record StudyCreateRequestDto(
         LocalDate recruitEnd,
         LocalDate studyStart,
         LocalDate studyEnd,
-        String content
+        String content,
+        Long writerId
 ) {}

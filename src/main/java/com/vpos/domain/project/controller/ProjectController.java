@@ -2,6 +2,7 @@ package com.vpos.domain.project.controller;
 
 import com.vpos.domain.project.dto.request.ProjectApplyRequestDto;
 import com.vpos.domain.project.dto.request.ProjectCreateRequestDto;
+import com.vpos.domain.project.dto.response.ProjectApplicantResponseDto;
 import com.vpos.domain.project.dto.response.ProjectDetailResponseDto;
 import com.vpos.domain.project.dto.response.ProjectListResponseDto;
 import com.vpos.domain.project.service.ProjectService;
@@ -53,5 +54,15 @@ public class ProjectController {
 
         projectService.cancelProjectApplication(userDetails.getId(), applicationId);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/projects/{projectId}/applications/{applicationId}")
+    public ResponseEntity<ProjectApplicantResponseDto> getProjectApplicationDetail(
+            @PathVariable Long projectId,
+            @PathVariable Long applicationId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(
+                projectService.getApplicationReview(projectId, applicationId, userDetails.getId())
+        );
     }
 }
