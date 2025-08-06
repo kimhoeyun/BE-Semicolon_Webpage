@@ -1,6 +1,6 @@
 package com.vpos.domain.user.dto.response;
 
-public record UserAppyPermitResponseDto(
+public record UserApplyPermitResponseDto(
         Long applicationId,
         String title,
         String type,     // "STUDY", "PROJECT"
