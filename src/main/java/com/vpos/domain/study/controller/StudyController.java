@@ -2,6 +2,7 @@ package com.vpos.domain.study.controller;
 
 import com.vpos.domain.study.dto.request.StudyApplyRequestDto;
 import com.vpos.domain.study.dto.request.StudyCreateRequestDto;
+import com.vpos.domain.study.dto.response.StudyApplicantResponseDto;
 import com.vpos.domain.study.dto.response.StudyDetailResponseDto;
 import com.vpos.domain.study.dto.response.StudyListResponseDto;
 import com.vpos.domain.study.service.StudyService;
@@ -53,5 +54,15 @@ public class StudyController {
 
         studyService.cancelStudyApplication(userDetails.getId(), applicationId);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/studies/{studyId}/applications/{applicationId}")
+    public ResponseEntity<StudyApplicantResponseDto> getStudyApplicationDetail(
+            @PathVariable Long studyId,
+            @PathVariable Long applicationId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(
+                studyService.getApplicationReview(studyId, applicationId, userDetails.getId())
+        );
     }
 }
